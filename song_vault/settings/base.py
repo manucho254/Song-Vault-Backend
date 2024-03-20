@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'apps.artists',
     'apps.playlists',
     'apps.songs',
+    'apps.albums',
     
     # third party apps
     'corsheaders',

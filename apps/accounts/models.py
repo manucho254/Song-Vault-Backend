@@ -28,7 +28,7 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, date_of_birth, password=None):
+    def create_superuser(self, email: str, password=None):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
@@ -36,9 +36,9 @@ class CustomUserManager(BaseUserManager):
         user = self.create_user(
             email,
             password=password,
-            date_of_birth=date_of_birth,
         )
         user.is_admin = True
+        user.is_staff = True
         user.save(using=self._db)
         return user
 
@@ -54,7 +54,7 @@ class User(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
-    user_id = models.UUIDField(max_length=255, default=uuid4, primary_key=True)
+    id = models.UUIDField(max_length=255, default=uuid4, primary_key=True)
     username = models.CharField(max_length=255, null=False, blank=False)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
