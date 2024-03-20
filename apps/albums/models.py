@@ -8,7 +8,7 @@ from apps.artists.models import Artist
 class Album(models.Model):
 
     album_id = models.UUIDField(max_length=255, default=uuid4, primary_key=True)
-    artist_album = models.ForeignKey(
+    artist = models.ForeignKey(
         Artist,
         on_delete=models.CASCADE,
         related_name="artist_album",
