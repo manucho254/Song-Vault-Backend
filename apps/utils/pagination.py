@@ -5,6 +5,11 @@ from django.db.models import QuerySet
 
 
 class CustomPagination(PageNumberPagination):
+    """ Extend PageNumberPagination class
+
+    Args:
+        PageNumberPagination (_type_): Pagination Class
+    """
     default_page = 1
     page_size = 20
 
