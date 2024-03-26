@@ -2,6 +2,8 @@ from apps.utils.constants import GENRES
 
 from datetime import timedelta, datetime
 from typing import List, Dict, Union
+import math
+import os
 
 from django.conf import settings
 
@@ -44,3 +46,50 @@ def decode_token(token: str) -> Union[Dict, None]:
         return jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
         return None
+
+
+def check_file_size(file) -> int:
+    """Check size of a file
+
+    Args:
+        file (_type_): file to check size
+
+    Returns:
+        int: size of a file in megabytes
+    """
+    return math.floor(os.stat(file).st_size / (1024 * 1024))
+
+
+def valid_mp3_extension(file_name: str) -> bool:
+    """check if mp3 has a valid extension
+
+    Args:
+        file_name (str): name of mp3 file
+
+    Returns:
+        bool: True if file has the correct extension else false
+    """
+    if not file_name:
+        return False
+
+    name_split = file_name.split(".")[-1]
+
+    return name_split != "mp3"
+
+
+def valid_image_extension(file_name: str) -> bool:
+    """check if image has a valid extension
+
+    Args:
+        file_name (str): name of image
+
+    Returns:
+        bool: True if file has the correct extension else false
+    """
+    if not file_name:
+        return False
+
+    name_split = file_name.split(".")[-1]
+    valid_extensions = ["jpg", "png", "jpeg"]
+
+    return name_split in valid_extensions

@@ -23,7 +23,7 @@ class SongGenre(models.Model):
 
 class Song(models.Model):
 
-    id = models.UUIDField(max_length=255, default=uuid4, primary_key=True)
+    song_id = models.UUIDField(max_length=255, default=uuid4, primary_key=True)
     name = models.CharField(max_length=255)
     artist = models.ForeignKey(
         Artist, on_delete=models.CASCADE, related_name="song_artist"
@@ -60,6 +60,17 @@ class SongMedia(models.Model):
     class Meta:
         verbose_name_plural = "Song's Media"
         ordering = ["-created_at"]
+
+    def save(self, *args, **kwargs):
+        # change file names on save
+        image_name = "song_image_{}.{}".format(
+            str(uuid4()), self.image.name.split(".")[-1]
+        )
+        file_name = "song_mp3_{}.{}".format(str(uuid4()), self.file.name.split(".")[-1])
+        self.image.name = image_name
+        self.file.name = file_name
+
+        super(SongMedia, self).save(*args, **kwargs)
 
     def __str__(self) -> str:
         return "{}".format(self.media_id)

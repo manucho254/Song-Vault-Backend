@@ -98,5 +98,14 @@ class UserMedia(models.Model):
         verbose_name_plural = "User's Media"
         ordering = ["-created_at"]
 
+    def save(self, *args, **kwargs):
+        # change file names on save
+        image_name = "user_image_{}.{}".format(
+            str(uuid4()), self.image.name.split(".")[-1]
+        )
+        self.image.name = image_name
+
+        super(UserMedia, self).save(*args, **kwargs)
+
     def __str__(self) -> str:
         return "{}".format(self.media_id)
