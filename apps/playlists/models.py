@@ -17,7 +17,7 @@ class Playlist(models.Model):
         User, on_delete=models.CASCADE, related_name="playlist_user"
     )
     name = models.CharField(max_length=255)
-    songs = models.ManyToManyField(Song, related_name="playlist_songs")
+    songs = models.ManyToManyField(Song, related_name="playlist_songs", blank=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

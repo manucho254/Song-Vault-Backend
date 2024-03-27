@@ -72,5 +72,13 @@ class SongMedia(models.Model):
 
         super(SongMedia, self).save(*args, **kwargs)
 
+    def delete(self, *args, **kwargs):
+        """Delete local files on delete"""
+        if self.image:
+            self.file.delete()
+        if self.file:
+            self.file.delete()
+        return super(SongMedia, self).save(*args, **kwargs)
+
     def __str__(self) -> str:
         return "{}".format(self.media_id)

@@ -30,7 +30,7 @@ class AlbumViewSet(BaseViewSet):
 
         if not artist:
             return Response(
-                data={"Error": "Forbidden."}, status=status.HTTP_403_FORBIDDEN
+                data={"error": "Forbidden."}, status=status.HTTP_403_FORBIDDEN
             )
 
         if not serializer.is_valid():
@@ -42,22 +42,22 @@ class AlbumViewSet(BaseViewSet):
         for song in songs:
             if check_file_size(song.image) > 2:  # check image file size
                 return Response(
-                    data={"Error": "Song Cover too large."},
+                    data={"error": "Song Cover too large."},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             if not valid_image_extension(str(song.image)):  # check image file extension
                 return Response(
-                    data={"Error": "Invalid Song Cover extension."},
+                    data={"error": "Invalid Song Cover extension."},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             if check_file_size(song.file) > 10:  # check mp3 file size
                 return Response(
-                    data={"Error": "Mp3 file too large."},
+                    data={"error": "Mp3 file too large."},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             if not valid_mp3_extension(str(song.file)):  # check mp3 file extension
                 return Response(
-                    data={"Error": "Invalid file extension."},
+                    data={"error": "Invalid file extension."},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             media = {"image": song.image, "file": song.file}
@@ -84,7 +84,7 @@ class AlbumViewSet(BaseViewSet):
             str(data.cover_image)
         ):  # check image file extension
             return Response(
-                data={"Error": "Invalid Album Cover extension."},
+                data={"error": "Invalid Album Cover extension."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -134,7 +134,7 @@ class AlbumViewSet(BaseViewSet):
 
         if not artist:
             return Response(
-                data={"Error": "Forbidden."}, status=status.HTTP_403_FORBIDDEN
+                data={"error": "Forbidden."}, status=status.HTTP_403_FORBIDDEN
             )
 
         if not album:

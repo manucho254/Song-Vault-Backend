@@ -48,9 +48,35 @@ class PlayListViewSet(BaseViewSet):
         return Response(data=paginated_res, status=status.HTTP_200_OK)
 
     def retrieve(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_200_OK)
+        playlist_id = kwargs.get("playlist_id")
+        playlist = self.queryset.filter(playlist_id=playlist_id).first()
+
+        if not playlist:
+            return Response(
+                data={"error": "Playlist not found."}, status=status.HTTP_404_NOT_FOUND
+            )
+        serializer = self.serializer_class(playlist)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
+        data: dict = request.data
+        playlist_id = kwargs.get("playlist_id")
+        user = User.objects.get(user_id=request.user.user_id)
+        playlist = self.queryset.filter(user=user, playlist_id=playlist_id).first()
+
+        if not playlist:
+            return Response(
+                data={"error": "Playlist not found."}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = self.serializer_class(playlist, data=data, partial=True)
+        if not serializer.is_valid():
+            return Response(
+                data={"error": "Invalid data provided."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        serializer.save()
+
         return Response(status=status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):

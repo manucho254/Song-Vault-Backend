@@ -33,5 +33,11 @@ class Album(models.Model):
 
         super(Album, self).save(*args, **kwargs)
 
+    def delete(self, *args, **kwargs):
+        """Delete local files on delete"""
+        if self.cover_image:
+            self.cover_image.delete()
+        return super(Album, self).save(*args, **kwargs)
+
     def __str__(self):
         return "{}".format(self.title)

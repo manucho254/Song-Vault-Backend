@@ -11,7 +11,7 @@ class Artist(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="artist_user"
     )
-    about = models.TextField(max_length=2000)
+    about = models.TextField(max_length=2000, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -20,4 +20,4 @@ class Artist(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self) -> str:
-        return "{} {}".format(self.artist_id, self.name)
+        return "{} {}".format(self.artist_id, self.user.username)

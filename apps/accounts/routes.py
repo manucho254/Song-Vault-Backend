@@ -1,5 +1,6 @@
 from apps.accounts.views import (
-    RegisterViewSet,
+    RegisterArtistViewSet,
+    RegisterUserViewSet,
     LoginViewSet,
     PassWordChangeViewSet,
     PassWordResetViewSet,
@@ -12,7 +13,8 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 
-router.register("register", RegisterViewSet, basename="Register User")
+router.register("register-user", RegisterUserViewSet, basename="Register User")
+router.register("register-artist", RegisterArtistViewSet, basename="Register Artist")
 router.register("login", LoginViewSet, basename="Login User")
 router.register("confirm_email", ConfirmEmailViewSet, basename="Confirm email")
 router.register("reset_password", PassWordResetViewSet, basename="Reset password")
