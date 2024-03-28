@@ -10,14 +10,14 @@ from apps.utils.pagination import CustomPagination
 
 
 class PlayListViewSet(BaseViewSet):
-
+    lookup_field = "playlist_id"
     queryset = Playlist.objects.all()
     serializer_class = PlayListSerializer
     pagination_class = CustomPagination()
 
     def create(self, request, *args, **kwargs):
         data: dict = request.data
-        user: User = User.objects.get(request.user.user_id)
+        user: User = User.objects.get(id=request.user.id)
         serializer = self.serializer_class(data=data)
         songs = data.get("songs", [])
 
@@ -40,8 +40,10 @@ class PlayListViewSet(BaseViewSet):
         return Response(status=status.HTTP_201_CREATED)
 
     def list(self, request, *args, **kwargs):
+        user: User = User.objects.get(id=request.user.id)
+        playlists = self.queryset.filter(user=user)
         paginated_res = self.pagination_class.get_paginated_response(
-            query_set=self.queryset,
+            query_set=playlists,
             serializer_obj=self.serializer_class,
             request=request,
         )
@@ -49,7 +51,8 @@ class PlayListViewSet(BaseViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         playlist_id = kwargs.get("playlist_id")
-        playlist = self.queryset.filter(playlist_id=playlist_id).first()
+        user: User = User.objects.get(id=request.user.id)
+        playlist = self.queryset.filter(user=user, playlist_id=playlist_id).first()
 
         if not playlist:
             return Response(
@@ -61,7 +64,7 @@ class PlayListViewSet(BaseViewSet):
     def update(self, request, *args, **kwargs):
         data: dict = request.data
         playlist_id = kwargs.get("playlist_id")
-        user = User.objects.get(user_id=request.user.user_id)
+        user: User = User.objects.get(id=request.user.id)
         playlist = self.queryset.filter(user=user, playlist_id=playlist_id).first()
 
         if not playlist:

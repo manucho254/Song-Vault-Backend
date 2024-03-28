@@ -7,6 +7,11 @@ __pycache__/
 *.so
 prod.py
 
+*.mp3
+*.jpg
+*.png
+*.jpeg
+
 # Distribution / packaging
 .Python
 build/

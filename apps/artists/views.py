@@ -4,14 +4,15 @@ from rest_framework import status
 from apps.accounts.models import User
 from apps.accounts.serializers import UserSerializer
 from apps.artists.models import Artist
+from apps.artists.serializers import ArtistSerializer
 from apps.utils.base import BaseViewSet
 from apps.utils.pagination import CustomPagination
 
 
 class ArtistViewSet(BaseViewSet):
-
+    lookup_field = "artist_id"
     queryset = Artist.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = ArtistSerializer
     pagination_class = CustomPagination()
 
     def list(self, request, *args, **kwargs):
@@ -37,7 +38,7 @@ class ArtistViewSet(BaseViewSet):
 
     def update(self, request, *args, **kwargs):
         artist_id = kwargs.get("artist_id")
-        user: User = User.objects.get(user_id=request.user.user_id)
+        user: User = User.objects.get(id=request.user.id)
         artist: Artist = Artist.objects.filter(artist_id=artist_id, user=user).first()
 
         if not artist:
@@ -49,7 +50,7 @@ class ArtistViewSet(BaseViewSet):
 
     def destroy(self, request, *args, **kwargs):
         artist_id = kwargs.get("artist_id")
-        user: User = User.objects.get(user_id=request.user.user_id)
+        user: User = User.objects.get(id=request.user.id)
         artist: Artist = Artist.objects.filter(artist_id=artist_id, user=user).first()
 
         if not artist:

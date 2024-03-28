@@ -8,7 +8,7 @@ from apps.accounts.models import User
 class Artist(models.Model):
 
     artist_id = models.UUIDField(max_length=255, default=uuid4, primary_key=True)
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="artist_user"
     )
     about = models.TextField(max_length=2000, blank=True, null=True)

@@ -9,4 +9,4 @@ class ArtistSerializer(serializers.Serializer):
 
     class Meta:
         model = Artist
-        fields = ["artist_id", "user", "about", "created_at", "updated_at"]
+        fields = '__all__'

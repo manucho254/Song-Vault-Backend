@@ -7,7 +7,7 @@ from apps.songs.serializers import SongSerializer
 
 class PlayListSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False, read_only=True)
-    playlist_songs = SongSerializer(many=True, read_only=True)
+    songs = SongSerializer(many=True, read_only=True)
 
     class Meta:
         model = Playlist

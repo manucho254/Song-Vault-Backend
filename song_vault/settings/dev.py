@@ -9,6 +9,7 @@ CORS_ALLOWED_ORIGINS = [
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8080",
+    "http://localhost:5173",
 ]
 
 # Database

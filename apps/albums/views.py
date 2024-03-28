@@ -16,13 +16,14 @@ from apps.utils.pagination import CustomPagination
 
 
 class AlbumViewSet(BaseViewSet):
+    lookup_field = "album_id"
     queryset = Album.objects.all().select_related("artist")
     serializer_class = AlbumSerializer
     pagination_class = CustomPagination()
 
     def create(self, request, *args, **kwargs):
         data: dict = request.data
-        user: User = User.objects.get(user_id=request.user.user_id)
+        user: User = User.objects.get(id=request.user.id)
         artist: Artist = Artist.objects.filter(user=user).first()
         serializer = AlbumSerializer(data=data)
         songs = data.get("songs", [])
@@ -128,7 +129,7 @@ class AlbumViewSet(BaseViewSet):
 
     def update(self, request, *args, **kwargs):
         album_id = kwargs.get("album_id")
-        user: User = User.objects.get(user_id=request.user.user_id)
+        user: User = User.objects.get(id=request.user.id)
         artist: Artist = Artist.objects.filter(user=user).first()
         album = self.queryset.filter(album_id=album_id).first()
 
@@ -149,7 +150,7 @@ class AlbumViewSet(BaseViewSet):
 
     def destroy(self, request, *args, **kwargs):
         album_id = kwargs.get("album_id")
-        user: User = User.objects.get(user_id=request.user.user_id)
+        user: User = User.objects.get(id=request.user.id)
         artist: Artist = Artist.objects.filter(user=user).first()
         album = self.queryset.filter(album_id=album_id).first()
 

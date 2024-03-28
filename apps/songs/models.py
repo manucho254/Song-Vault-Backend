@@ -32,6 +32,7 @@ class Song(models.Model):
     genre = models.ForeignKey(
         SongGenre, on_delete=models.CASCADE, related_name="song_genre", null=True
     )
+    duration = models.CharField(max_length=255, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -40,7 +41,7 @@ class Song(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self) -> str:
-        return "Song {} by {}".format(self.name, self.artist.name)
+        return "Song {} by {}".format(self.name, self.artist.user.username)
 
 
 class SongMedia(models.Model):

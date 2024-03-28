@@ -12,7 +12,7 @@ class Playlist(models.Model):
         models (_type_): _description_
     """
 
-    playlist_id = models.UUIDField(max_length=255, default=uuid4)
+    playlist_id = models.UUIDField(max_length=255, default=uuid4, unique=True)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="playlist_user"
     )

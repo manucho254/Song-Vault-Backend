@@ -29,6 +29,7 @@ class SongSerializer(serializers.ModelSerializer):
             "name",
             "artist",
             "lyrics",
+            "duration",
             "song_media",
             "genre",
             "updated_at",

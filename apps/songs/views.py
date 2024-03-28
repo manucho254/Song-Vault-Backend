@@ -15,14 +15,14 @@ from apps.utils.base import BaseViewSet
 
 
 class SongViewSet(BaseViewSet):
-
+    lookup_field = "song_id"
     queryset = Song.objects.all()
     serializer_class = SongSerializer
-    pagination_class = CustomPagination
+    pagination_class = CustomPagination()
 
     def create(self, request, *args, **kwargs):
         data: dict = request.data
-        user: User = User.objects.get(user_id=request.user.user_id)
+        user: User = User.objects.get(id=request.user.id)
         artist: Artist = Artist.objects.filter(user=user).first()
         serializer = self.serializer_class(data=data)
 
@@ -83,16 +83,14 @@ class SongViewSet(BaseViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         song_id = kwargs.get("song_id")
-        user: User = User.objects.get(user_id=request.user.user_id)
-        artist: Artist = Artist.objects.filter(user=user).first()
-        song: Song = self.queryset.filter(song_id=song_id, artist=artist).first()
+        song: Song = self.queryset.filter(song_id=song_id).first()
         serializer = self.serializer_class(song)
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
         song_id = kwargs.get("song_id")
-        user: User = User.objects.get(user_id=request.user.user_id)
+        user: User = User.objects.get(id=request.user.id)
         artist: Artist = Artist.objects.filter(user=user).first()
         song: Song = self.queryset.filter(song_id=song_id, artist=artist).first()
 
@@ -100,7 +98,7 @@ class SongViewSet(BaseViewSet):
 
     def destroy(self, request, *args, **kwargs):
         song_id = kwargs.get("song_id")
-        user: User = User.objects.get(user_id=request.user.user_id)
+        user: User = User.objects.get(id=request.user.id)
         artist: Artist = Artist.objects.filter(user=user).first()
         song: Song = self.queryset.filter(song_id=song_id, artist=artist).first()
 
