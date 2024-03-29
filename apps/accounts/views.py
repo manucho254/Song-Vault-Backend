@@ -3,7 +3,7 @@ from apps.artists.serializers import ArtistSerializer
 from apps.utils.helpers import decode_token, encode_token
 from apps.accounts.serializers import UserSerializer
 from apps.accounts.models import User
-from apps.utils.base import AuthBaseViewSet
+from apps.utils.base import AuthBaseViewSet, BaseViewSet
 
 from django.contrib.auth import authenticate
 
@@ -341,3 +341,36 @@ class RefreshTokenViewSet(AuthBaseViewSet, TokenRefreshView):
                 {"message": "Token invalid or expired, please try again."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+class userProfileViewSet(BaseViewSet):
+    lookup_field = "user_id"
+
+    def retrieve(self, request, *args, **kwargs):
+        user = User.objects.get(id=request.user.id)
+        if not user:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        return Response(UserSerializer(user).data, status=status.HTTP_404_NOT_FOUND)
+
+    def update(self, request, *args, **kwargs):
+        data = request.data
+        user = User.objects.get(id=request.user.id)
+        serializer = UserSerializer(data=data)
+
+        if not user:
+            return Response(
+                data={"error": "User not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        if not serializer.is_valid():
+            return Response(
+                data={"error": "Invalid data provided."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        serializer.update(user, data)
+        serializer.save()
+
+        return Response(user, status=status.HTTP_404_NOT_FOUND)

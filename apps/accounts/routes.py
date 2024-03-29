@@ -6,6 +6,7 @@ from apps.accounts.views import (
     PassWordResetViewSet,
     ConfirmEmailViewSet,
     RefreshTokenViewSet,
+    userProfileViewSet,
 )
 
 from rest_framework.routers import DefaultRouter
@@ -20,3 +21,5 @@ router.register("confirm_email", ConfirmEmailViewSet, basename="Confirm email")
 router.register("reset_password", PassWordResetViewSet, basename="Reset password")
 router.register("change_password", PassWordChangeViewSet, basename="Change password")
 router.register("refresh_token", RefreshTokenViewSet, basename="Refresh token")
+router.register("profile", userProfileViewSet, basename="User profile")
+
