@@ -2,9 +2,12 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from apps.accounts.models import User
-from apps.accounts.serializers import UserSerializer
+from apps.albums.models import Album
+from apps.albums.serializers import AlbumSerializer
 from apps.artists.models import Artist
 from apps.artists.serializers import ArtistSerializer
+from apps.songs.models import Song
+from apps.songs.serializers import SongSerializer
 from apps.utils.base import BaseViewSet
 from apps.utils.pagination import CustomPagination
 
@@ -22,6 +25,7 @@ class ArtistViewSet(BaseViewSet):
             serializer_obj=self.serializer_class,
             request=request,
         )
+
         return Response(data=paginated_res, status=status.HTTP_200_OK)
 
     def retrieve(self, request, *args, **kwargs):
@@ -34,7 +38,20 @@ class ArtistViewSet(BaseViewSet):
             )
 
         serializer = self.serializer_class(artist)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        data = dict(serializer.data)
+        albums, songs = [], []
+
+        # get all artist songs and albums
+        for song in Song.objects.filter(artist=artist):
+            songs.append(SongSerializer(song).data)
+
+        for album in Album.objects.filter(artist=artist):
+            albums.append(AlbumSerializer(album).data)
+
+        data.update({"songs": songs})
+        data.update({"albums": albums})
+
+        return Response(data, status=status.HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
         artist_id = kwargs.get("artist_id")

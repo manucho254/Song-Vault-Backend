@@ -6,7 +6,7 @@ from apps.songs.models import SongGenre, Song, SongMedia
 class SongAdmin(admin.ModelAdmin):
     list_display = [
         "song_id",
-        "name",
+        "title",
         "artist",
         "genre",
         "updated_at",

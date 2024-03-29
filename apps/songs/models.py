@@ -24,7 +24,7 @@ class SongGenre(models.Model):
 class Song(models.Model):
 
     song_id = models.UUIDField(max_length=255, default=uuid4, primary_key=True)
-    name = models.CharField(max_length=255)
+    title = models.CharField(max_length=255)
     artist = models.ForeignKey(
         Artist, on_delete=models.CASCADE, related_name="song_artist"
     )
@@ -41,7 +41,7 @@ class Song(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self) -> str:
-        return "Song {} by {}".format(self.name, self.artist.user.username)
+        return "Song {} by {}".format(self.title, self.artist.user.username)
 
 
 class SongMedia(models.Model):

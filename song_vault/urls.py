@@ -1,5 +1,6 @@
 """ Urls module
 """
+
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
@@ -15,6 +16,7 @@ from apps.albums import routes as album_routes
 from apps.artists import routes as artist_routes
 from apps.playlists import routes as playlist_routes
 from apps.songs import routes as song_routes
+from apps.core import routes as core_routes
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -37,6 +39,7 @@ urlpatterns = [
     path("api/artists/", include(artist_routes.router.urls)),
     path("api/playlists/", include(playlist_routes.router.urls)),
     path("api/songs/", include(song_routes.router.urls)),
+    path("api/search", include(core_routes.router.urls)),
     path(
         "api/swagger/",
         schema_view.with_ui("swagger", cache_timeout=0),
