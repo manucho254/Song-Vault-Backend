@@ -16,28 +16,16 @@ class PlayListViewSet(BaseViewSet):
     pagination_class = CustomPagination()
 
     def create(self, request, *args, **kwargs):
-        data: dict = request.data
         user: User = User.objects.get(id=request.user.id)
-        serializer = self.serializer_class(data=data)
-        songs = data.get("songs", [])
+        count = self.queryset.all().count() + 1
 
-        if not serializer.is_valid():
-            return Response(
-                data={"error": "Invalid data provided."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        del data["songs"]
-        del data["user"]
-        playlist, created = self.queryset.update_or_create(**data)
-        playlist.user = user
-        for song_id in songs:
-            obj = Song.objects.filter(song_id=song_id).first()
-            playlist.songs.append(obj)
-            playlist.save()
+        playlist = self.queryset.create(user=user, name=f"My Playlist #{count}")
         playlist.save()
 
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(
+            self.serializer_class(playlist).data,
+            status=status.HTTP_201_CREATED,
+        )
 
     def list(self, request, *args, **kwargs):
         user: User = User.objects.get(id=request.user.id)

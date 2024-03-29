@@ -351,26 +351,28 @@ class userProfileViewSet(BaseViewSet):
         if not user:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        return Response(UserSerializer(user).data, status=status.HTTP_404_NOT_FOUND)
+        return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
         data = request.data
         user = User.objects.get(id=request.user.id)
-        serializer = UserSerializer(data=data)
 
         if not user:
             return Response(
                 data={"error": "User not found."},
                 status=status.HTTP_404_NOT_FOUND,
             )
+            
+        to_update = {
+            "username": data.get("username"),
+            "first_name": data.get("first_name"),
+            "last_name": data.get("last_name"),
+            "country": data.get("country"),
+            "gender": data.get("gender"),
+        }
 
-        if not serializer.is_valid():
-            return Response(
-                data={"error": "Invalid data provided."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        for key, val in to_update.items():
+            setattr(user, key, val)
+            user.save()
 
-        serializer.update(user, data)
-        serializer.save()
-
-        return Response(user, status=status.HTTP_404_NOT_FOUND)
+        return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
