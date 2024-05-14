@@ -335,8 +335,12 @@ class RefreshTokenViewSet(AuthBaseViewSet, TokenRefreshView):
         serializer = self.get_serializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
-            return Response(serializer.validated_data, status=status.HTTP_200_OK)
+            tokens = dict(serializer.validated_data)
+            tokens["access_token"] = tokens.get("access")
+            del tokens["access"]
+            return Response(tokens, status=status.HTTP_200_OK)
         except TokenError as e:
+            # we will log the error once we implement logging
             return Response(
                 {"message": "Token invalid or expired, please try again."},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -362,7 +366,7 @@ class userProfileViewSet(BaseViewSet):
                 data={"error": "User not found."},
                 status=status.HTTP_404_NOT_FOUND,
             )
-            
+
         to_update = {
             "username": data.get("username"),
             "first_name": data.get("first_name"),

@@ -18,13 +18,12 @@ class SearchViewSet(BaseViewSet):
         albums = Album.objects.all()
         songs = Song.objects.all()
         artists = Artist.objects.all()
-        
-        
+
         if not query or query == "":
             data["songs"] = SongSerializer(songs, many=True).data
             data["albums"] = AlbumSerializer(albums, many=True).data
             data["artists"] = ArtistSerializer(artists, many=True).data
-            
+
             return Response(data, status=status.HTTP_200_OK)
 
         songs = songs.filter(title__icontains=query)

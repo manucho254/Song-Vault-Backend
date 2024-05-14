@@ -39,7 +39,7 @@ urlpatterns = [
     path("api/artists/", include(artist_routes.router.urls)),
     path("api/playlists/", include(playlist_routes.router.urls)),
     path("api/songs/", include(song_routes.router.urls)),
-    path("api/search", include(core_routes.router.urls)),
+    path("api/search/", include(core_routes.router.urls)),
     path(
         "api/swagger/",
         schema_view.with_ui("swagger", cache_timeout=0),
