@@ -26,6 +26,13 @@ DATABASES = {
     },
 }
 
-FRONTEND_URL = "http://localhost:8080"
-
+FRONTEND_URL = "http://localhost:5173/"
 PASSWORD_RESET_TIMEOUT = 10_800
+
+# Email smtp
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = env("EMAIL_HOST")
+EMAIL_PORT = env("EMAIL_PORT")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")

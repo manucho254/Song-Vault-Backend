@@ -6,6 +6,9 @@ import math
 import os
 
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 import jwt
 
@@ -93,3 +96,42 @@ def valid_image_extension(file_name: str) -> bool:
     valid_extensions = ["jpg", "png", "jpeg"]
 
     return name_split in valid_extensions
+
+
+def generate_link(token: str, base_dir: str) -> str:
+    """Generates a link
+
+    Args:
+        token (str): _description_
+        base_dir (str): _description_
+
+    Returns:
+        str: _description_
+    """
+    return settings.FRONTEND_URL + base_dir + "/" + token
+
+
+def send_email_message(
+    template: str, context: Dict, to: List[str], subject: str, base_dir: str
+) -> None:
+    """Custom email sending function
+    Args:
+        subj (str): "message subject"
+        template (str): "email template"
+        context (dict): key value pairs of user information
+        to (List[str]): receivers email
+    """
+    subject, from_email = (
+        subject,
+        settings.EMAIL_HOST_USER,
+    )
+    if context.get("name") is None:
+        context["name"] = to
+    context["link"] = generate_link(context["token"], base_dir)
+    print(context["link"])
+    del context["token"]
+    html_content = render_to_string(template, context)
+    text_content = strip_tags(html_content)
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()

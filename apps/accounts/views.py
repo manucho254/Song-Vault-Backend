@@ -1,6 +1,6 @@
 from apps.artists.models import Artist
 from apps.artists.serializers import ArtistSerializer
-from apps.utils.helpers import decode_token, encode_token
+from apps.utils.helpers import decode_token, encode_token, send_email_message
 from apps.accounts.serializers import UserSerializer
 from apps.accounts.models import User
 from apps.utils.base import AuthBaseViewSet, BaseViewSet
@@ -77,8 +77,15 @@ class RegisterUserViewSet(AuthBaseViewSet):
         user.save()
 
         token = encode_token({"user_id": str(user.id)}, 24)  # expire in 24 hours
-        # send email later
-        # send_email()
+        # send confirmation email to user
+        context = {"name": user.username, "token": token}
+        send_email_message(
+            "confirm_email.html",
+            context,
+            user.email,
+            "Confirm Email - Song Vault",
+            "register-user",
+        )
 
         return Response(
             data={"message": "Account created successfully."},
@@ -156,7 +163,14 @@ class RegisterArtistViewSet(AuthBaseViewSet):
 
         token = encode_token({"user_id": str(user.id)}, 24)  # expire in 24 hours
         # send email later
-        # send_email()
+        context = {"name": user.username, "token": token}
+        send_email_message(
+            "confirm_email.html",
+            context,
+            user.email,
+            "Confirm Email - Song Vault",
+            "register-artist",
+        )
 
         return Response(
             data={"message": "Artist account created successfully."},
@@ -263,10 +277,17 @@ class PassWordResetViewSet(AuthBaseViewSet):
                 data={"error": "User not found!"}, status=status.HTTP_404_NOT_FOUND
             )
 
-        user_serializer = UserSerializer(user)
-        token = encode_token({"user_id": str(user_serializer.id)})
+        user_serializer = UserSerializer(user).data
+        token = encode_token({"user_id": str(user_serializer.get("id"))})
 
-        # send_email(token)
+        context = {"name": user.username, "token": token}
+        send_email_message(
+            "reset_password.html",
+            context,
+            user.email,
+            "Reset Password Instructions - Song Vault",
+            "change-password",
+        )
 
         return Response(
             data={"message": "Email Sent successfully"}, status=status.HTTP_200_OK
