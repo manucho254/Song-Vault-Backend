@@ -13,8 +13,8 @@ Authentication:
     ✅ SignUp
     ✅ Login
     ✅ Logout
-    ❌ Reset Password
-    ❌ Email Confirmation
+    ✅ Reset Password
+    ✅ Email Confirmation
 
 Api endpoints:
 
